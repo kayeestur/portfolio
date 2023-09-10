@@ -125,5 +125,18 @@ GROUP BY DISTINCT amount
 HAVING COUNT(type)>10
 ORDER BY COUNT(type) DESC
 
-SELECT *
-FROM fraudactivity
+-- Another type of control for destination 
+SELECT type,amount,nameorig,oldbalanceorg,newbalanceorig,namedest,oldbalancedest,newbalancedest,
+CASE
+	WHEN amount <> (newbalancedest-oldbalancedest) THEN 'Incorrect New Balance in Destination'
+	ELSE 'For investigation'
+END AS Controls
+INTO destinationactivity
+FROM fraud_trans
+
+-- Zeroed out transactions where destination new balances match the amount transacted
+SELECT type, COUNT(type) AS NumOfTrans
+FROM destinationactivity
+WHERE controls LIKE '%investigation%'
+GROUP BY type
+ORDER BY COUNT(type) DESC
