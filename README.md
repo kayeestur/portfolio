@@ -1,2 +1,1 @@
-Hi everyone,
-This is where I will store my codes # portfolio
+SQL Codes used in my Portfolio projects
